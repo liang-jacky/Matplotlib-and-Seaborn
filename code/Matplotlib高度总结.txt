@@ -1,0 +1,249 @@
+# ---------------------------------------------
+绘图步骤：
+1、准备数据
+2、创建图形
+3、自定义绘图
+4、保存图形
+5、显示图形
+
+# ---------------------------------------------
+# 知识点0：创建画布、子图
+创建子图
+fig = plt.figure(figsize=(10,4))  # 第一种
+fig, ax = plt.subplots()          # 第二种
+add_subplot(row,col,num)
+add_subplot(221) 等效于 add_subplot(2, 2, 1)
+代表添加第 2 行第 2 列的第 1 个子图
+
+# ---------------------------------------------
+# 知识点1：条形图
+ax.bar(条形图在x轴位置，条形图高度，条形图的宽度)  纵向
+ax.barh() 横向
+
+# ---------------------------------------------
+# 知识点2：
+第一种方法：单一
+# tick_positions = range(1,6)
+# ax.set_xticks(tick_positions)
+# ax.set_xticklabels(cols, rotation=45)
+# ax.set_xlabel('Rating Source')
+# ax.set_ylabel('Average Rating')
+# ax.set_title('2015')
+# ax.set_xlim(0, 6)
+# ax.set_ylim(0, 6)
+
+第二种方法：统一性
+ax.set(title='2015',             # 标题
+       xlabel='Rating Source',   # X 轴标签 
+       ylabel='Average Rating',  # Y 轴标签
+       xticks=tick_positions,    # X、Y 轴刻度
+       xlim=[0, 6], ylim=[0, 6], # X、Y 轴范围限制
+      )
+ax.set_xticklabels(['要设置的标签值', ''], rotation=45)  X 轴刻度的标签值
+
+# ----------------------------------------------
+# 知识点3：散点图
+ax.scatter(x, y, color='red', marker=".")
+marker="." 是一个标记，ax.plot(x, y, color='', marker="o")
+
+# ----------------------------------------------
+# 知识点4：直方图
+语法参数：
+ax.hist(x, range(1, 5), bins=20)
+x：必选参数
+range(1, 5)：可选/可不选参数，代表限定 x 轴的区域(X 轴从 1 开始到 5 结束)
+bins = 20: 可选/可不选参数,直方图的宽度
+
+作用：用于探索某类数据的集中分布，发现某类数据的核心点在哪个值的范围
+
+# ----------------------------------------------
+# 知识点5：子图之间距离的调整
+1、可以调整画布的大小：
+fig = plt.figure(figsize=(5, 10))
+figsize=(宽度, 高度)
+
+2、子图间距函数
+fig.subplots_adjust(wspace=5,
+                    hspace=0.3, 
+                    left=0.125,
+                    right=0.9,
+                    top=3,
+                    bottom=0.1
+                   )
+
+# ---------------------------------------------
+# 知识点6：设置坐标轴线
+1、隐藏坐标轴线
+ax.spines['top/bottom/left/right'].set_visible(False/True)
+['top/bottom/left/right']: 代表哪个坐标轴线
+False/True: False 代表隐藏坐标线，True 代表显现坐标轴线
+
+for key,spine in ax1.spines.items():
+    print(key, '\t', spine)
+    spine.set_visible(False)
+Out:
+left 	 Spine
+right 	 Spine
+bottom 	 Spine
+top 	 Spine
+
+2、设置底部边线的位置为 outward
+ax.spines['bottom'].set_position(('outward', 10))
+
+3、隐藏刻度线
+ax.tick_params(bottom='off', top='off', left='off', right='off')
+ax.tick_params(bottom='off', left='off')
+
+4、隐藏刻度线、坐标轴线、刻度值
+ax.axis('off')
+
+5、设置内边距
+ax.margins(x=0.2, y=0.3)
+
+# ---------------------------------------
+# 知识点7：箱形图
+# 一个画布一个箱型图
+ax.boxplot(x)
+# 一个画布一个箱型图
+ax.boxplot([x1, x2, x3,...])
+它由五个数值点组成：从下到上
+0%最小值(min)，25%下四分位数(Q1)，50%中位数(median)，
+75%上四分位数(Q3)，100%最大值(max)
+
+作用：
+1、直观地识别数据集中的异常值(查看离群点),离群点单独析出
+2、判断数据离散程度和偏向(观察盒子的长度，上下隔间的形状，以及胡须的长度)
+
+# ---------------------------------------
+# 知识点8：plt 与 ax 绘图的异同：
+1、相同：
+绘图函数的参数用法一样，比如：plt.plot(x, y, color='r') 与 ax.plot(x, y, color='r')
+其他描述性函数的参数用法一样，比如：plt.legend(loc='best') 与 ax.legend(loc='best')
+
+2、不同之处
+ax 使用 ax 绘图：
+比如：ax.plot/bar/scatter/hist等()
+比如：ax.legend/test/annotate/margins/axis/tick_params()
+比如：ax.set_xlim/ylim/title/xlabel/ylabel/xticks/yticks/xticklabel/yticklabel
+
+plt 使用 plt 绘图：
+比如：plt.plot/bar/scatter/hist等()
+比如：plt.legend/test/annotate/margins/axis/tick_params()
+比如：plt.xlim/ylim/title/xlabel/ylabel/xticks/yticks/xticklabel/yticklabel
+
+# ---------------------------------------
+# 知识点9：设置中文字体、字体大小
+(注意: 这里只能用 plt 不能用 ax)
+1、正常显示中文字体
+plt.rcParams['font.family'] = 'SimHei'
+
+2、字体大小
+#plt.rcParams['xtick.labelsize'] = 24
+#plt.rcParams['ytick.labelsize'] = 24
+
+# --------------------------------------------
+# 知识点10：ax.plot() 或 plt.plot()
+1、语法分析：
+ax.plot(X, Y, color, label, linewidth, linestyle, 
+        marker, markerfacecolor, markersize
+        )
+    
+2、参数介绍：
+（1）color/c：线条颜色
+Example：
+ax.plot(X, Y, color='b')
+==========  ========
+'b'         blue
+'g'         green
+'r'         red
+'c'         cyan
+'m'         magenta
+'y'         yellow
+'k'         black
+'w'         white
+==========  ========
+
+（2）label：设置图例的标签
+Example：
+ax.plot(X, Y, label='women')
+ax.legend(loc='best')
+label：自定义设置
+
+（3）linewidth/lw：设置线条的宽度
+Example：
+ax.plot(X, Y, linewidth=2)
+linewidth：自定义设置
+
+（4）linestyle/ls：线条风格
+['solid' | 'dashed', 'dashdot', 'dotted' | (offset, on-off-dash-seq) | ``'-'`` | ``'--'`` | ``'-.'`` | ``':'`` | ``'None'`` | ``' '`` | ``''``]
+
+（5）marker：线条标记
+     markerfacecolor/mfc：标记的颜色
+     markersize/ms：标记的大小
+Example：
+ax.plot(X, Y, marker='>', mfc='r', ms=15)     
+
+character           description
+================    ===============================
+``'-'``             solid line style
+``'--'``            dashed line style
+``'-.'``            dash-dot line style
+``':'``             dotted line style
+``'.'``             point marker
+``','``             pixel marker
+``'o'``             circle marker
+``'v'``             triangle_down marker
+``'^'``             triangle_up marker
+``'<'``             triangle_left marker
+``'>'``             triangle_right marker
+``'1'``             tri_down marker
+``'2'``             tri_up marker
+``'3'``             tri_left marker
+``'4'``             tri_right marker
+``'s'``             square marker
+``'p'``             pentagon marker
+``'*'``             star marker
+``'h'``             hexagon1 marker
+``'H'``             hexagon2 marker
+``'+'``             plus marker
+``'x'``             x marker
+``'D'``             diamond marker
+``'d'``             thin_diamond marker
+``'|'``             vline marker
+``'_'``             hline marker
+
+# ----------------------------------------
+# 知识点11：图像文本、标注
+1、文本：
+ax.text(x, y, s='this is text', fontsize=15)
+# =============
+x：x 轴的位置
+y：y 轴的位置
+s：设置书写的文本内容
+fontsize：设置字的大小
+
+2、标注：
+ax.annotate(
+s='lxz', xy=(1980, 65.1), xytext=(1970, 77.1), xycoords='data',textcoords='data', color='r', fontsize=20, arrowprops=dict(arrowstyle="->",connectionstyle='arc3',color='r',)
+)
+# =============
+s：代表要注释的内容（必选参数）
+xy：（实际点）代表 x、y 轴的位置（必选参数）
+xytext：（"注释内容"的实际位置）调整"注释内容"的位置，不设置就默认使用 xy 的位置
+xycoords：（实际点）默认为 data，代表注释
+textcoords：（"注释内容"的实际样式）不设置就默认使用 xycoords 的设置
+color：注释内容的颜色
+fontsize：注释内容的字体大小
+# ============
+# 设置箭头
+arrowprops=dict(arrowstyle="->",connectionstyle='arc3',color='r',)
+arrowstyle：设置箭头样式
+connectionstyle：连接风格
+color：箭头颜色
+
+# ---------------------------------------------
+# 
+
+
+
+
